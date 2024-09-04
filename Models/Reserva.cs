@@ -21,7 +21,7 @@ namespace DesafioHospedagem.Models
                 quantidadeHospedes = Convert.ToInt32(Console.ReadLine());
             }
 
-            Console.WriteLine($"Quantidade de hospedes: {quantidadeHospedes}");
+            Console.WriteLine($"\nQuantidade de hospedes: {quantidadeHospedes}");
 
             return quantidadeHospedes;
         }
@@ -37,13 +37,13 @@ namespace DesafioHospedagem.Models
 
                 while (nome == "")
                 {
-                    Console.WriteLine("Informe o nome do hóspede.\n");
+                    Console.WriteLine("\nInforme o nome do hóspede.\n");
                     nome = Console.ReadLine();
                 }
 
                 while (sobrenome == "")
                 {
-                    Console.WriteLine("Informe o sobrenome do hóspede.\n");
+                    Console.WriteLine("\nInforme o sobrenome do hóspede.\n");
                     sobrenome = Console.ReadLine();
                 }
 
@@ -52,7 +52,7 @@ namespace DesafioHospedagem.Models
                 hospedes.Add(hospede);
             }
 
-            Console.WriteLine($"Lista de hospedes:");
+            Console.WriteLine($"\nLista de hospedes:");
             Console.WriteLine($"Nome\tSobrenome");
             foreach (Pessoa hospede in hospedes)
             {
@@ -78,7 +78,7 @@ namespace DesafioHospedagem.Models
 
                 while (tipo != 1 && tipo != 2 && tipo != 3 && tipo != 4)
                 {
-                    Console.WriteLine($"Informe o tipo de suite ({hospedesRestantes} pessoas).\n1: simples (1 pessoa); \n2: casal (2 pessoas); \n3: família (5 pessoas); \n4: presidencial (10 pessoas).\n");
+                    Console.WriteLine($"\nInforme o tipo de suite ({hospedesRestantes} pessoas).\n1: simples (1 pessoa); \n2: casal (2 pessoas); \n3: família (5 pessoas); \n4: presidencial (10 pessoas).\n");
                     tipo = Convert.ToInt32(Console.ReadLine());
                 }
 
@@ -112,10 +112,10 @@ namespace DesafioHospedagem.Models
 
                 hospedesRestantes = hospedesRestantes - capacidade;
 
-                Console.WriteLine($"Hospedes restantes: {hospedesRestantes}");
+                Console.WriteLine($"\nHospedes restantes: {hospedesRestantes}");
             }
 
-            Console.WriteLine($"Lista de suites:");
+            Console.WriteLine($"\nLista de suites:");
             Console.WriteLine($"Suite\tValor Suite");
             foreach ((string tipo, decimal valorDiaria) suite in suites)
             {
@@ -127,7 +127,7 @@ namespace DesafioHospedagem.Models
 
         public List<(string, decimal, int, decimal)> CalcularValorDiaria(List<(string tipo, decimal valorDiaria)> suites)
         {
-            Console.WriteLine("Informe o período da reserva (dias).\n");
+            Console.WriteLine("\nInforme o período da reserva (dias).\n");
             int periodo = Convert.ToInt32(Console.ReadLine());
             decimal valorReserva = 0.0M;
             decimal totalDiarias = 0.0M;
@@ -151,15 +151,34 @@ namespace DesafioHospedagem.Models
                 valorReserva = valorReserva + subRecibo.valorTotal;
             }
 
+            // aplicação do desconto
+            if (periodo >= 10)
+            {
+                decimal valorDesconto = -(valorReserva * 0.1M);
+                valorReserva = valorReserva + valorDesconto;
+                // montagem da tupla com total da reserva
+                (string tipo, decimal valorDiaria, int periodo, decimal valorTotal) desconto = ("Desconto", 0, 0, valorDesconto);
+                // adiciona tupla com desconto ao recibo
+                recibo.Add(desconto);
+            }
+
             // montagem da tupla com total da reserva
             (string tipo, decimal valorDiaria, int periodo, decimal valorTotal) totalRecibo = ("Total", totalDiarias, periodo, valorReserva);
             // adiciona tupla com total ao recibo
             recibo.Add(totalRecibo);
 
-            Console.WriteLine($"Suite\tValor Suite\tPeriodo\tTotal Suite");
+            Console.WriteLine("\nExtrato da Reserva:");
+            Console.WriteLine($"Suite\t\tValor Suite\t\tPeriodo\t\tTotal Suite");
             foreach ((string tipo, decimal valorDiaria, int periodo, decimal valorTotal) registro in recibo)
             {
-                Console.WriteLine($"{registro.tipo}\t{registro.valorDiaria}\t\t{registro.periodo}\t{registro.valorTotal}");
+                if (registro.tipo == "Desconto")
+                {
+                    Console.WriteLine($"{registro.tipo}\t{registro.valorDiaria}\t\t\t{registro.periodo}\t\t{registro.valorTotal}");
+                }
+                else
+                {
+                    Console.WriteLine($"{registro.tipo}\t\t{registro.valorDiaria}\t\t\t{registro.periodo}\t\t{registro.valorTotal}");
+                }
             }
 
             return recibo;
